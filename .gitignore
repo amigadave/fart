@@ -1,0 +1,21 @@
+# object files
+*.o
+# Compiled binaries
+src/fart
+# Makefiles
+Makefile
+Makefile.in
+# configure script
+configure
+config.*
+# others
+.deps
+.dirstamp
+aclocal.m4
+autom4te.cache
+compile
+depcomp
+install-sh
+missing
+stamp-h1
+*.swp
