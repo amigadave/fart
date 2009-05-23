@@ -62,19 +62,15 @@ namespace Fart
       quit_game();
     }
 
-    /* Blit background to screen, then draw playe sprite after 1000
-     * miillisecond delay. */
+    /* Blit background and player sprite to screen. */
     blit_image(0, 0, background, screen);
-    SDL_Flip(screen);
-    SDL_Delay(1000);
     blit_image(0, 0, player, screen);
     SDL_Flip(screen);
-    SDL_Delay(1000);
 
+    SDL_Event events = { 0, };
     while(!quit)
     {
       /* SDL event loop. */
-      SDL_Event events = { 0, };
       if(SDL_PollEvent(&events))
       {
         switch(events.type)
@@ -83,26 +79,22 @@ namespace Fart
             std::clog << "Quit event received." << std::endl;
             quit = true;
             break;
-          case SDL_KEYDOWN:
-            switch(events.key.keysym.sym)
-            {
-              case SDLK_ESCAPE:
-                {
-                  std::clog << "Escape pressed." << std::endl;
-                  SDL_Event quit_event = { 0, };
-                  quit_event.type = SDL_QUIT;
-                  SDL_PushEvent(&quit_event);
-                  break;
-                }
-              default:
-                std::cerr << "Unhandled key pressed." << std::endl;
-                break;
-            }
-            break;
           default:
-            std::cerr << "Unhandled event received." << std::endl;
+            std::clog << "Unhandled SDL event received." << std::endl;
             break;
         }
+      }
+
+      /* Probe key state, rather than using key pressed/unpressed events. */
+      Uint8 *keystate = SDL_GetKeyState(static_cast<int*>(0));
+      if(keystate[SDLK_ESCAPE])
+      {
+        std::clog << "Escape pressed." << std::endl;
+        quit = true;
+      }
+      if(keystate[SDLK_k])
+      {
+        std::clog << "Thrust key pressed." << std::endl;
       }
 
       /* Flip screen, and quit on failure. */
