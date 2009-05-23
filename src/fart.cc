@@ -16,6 +16,7 @@
  * along with Fart. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include <iostream>
 #include "SDL.h"
 #include "fart.h"
@@ -25,16 +26,49 @@ namespace Fart
   Fart::Fart()
   {
     /* Set video mode. */
-    SDL_Surface *screen = SDL_SetVideoMode(640, 480, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_DEPTH, SDL_HWSURFACE | SDL_DOUBLEBUF);
     if(!screen)
     {
       std::cerr << "Unable to set video mode: " << SDL_GetError() << std::endl;
-      return;
+      quit_game();
     }
     else
     {
+      /* Second argument is for an icon. Use it when a logo exists. */
+      SDL_WM_SetCaption(PACKAGE_STRING, 0);
       std::clog << "Video mode set." << std::endl;
     }
+
+    /* Load images. */
+    background = load_image(BACKGROUND);
+    if(background)
+    {
+      std::clog << "Background image loaded." << std::endl;
+    }
+    else
+    {
+      std::cerr << "Error loading background image." << std::endl;
+      quit_game();
+    }
+    player = load_image(PLAYER);
+    if(player)
+    {
+      std::clog << "Player image loaded." << std::endl;
+    }
+    else
+    {
+      std::cerr << "Error loading player image." << std::endl;
+      quit_game();
+    }
+
+    /* Blit background to screen, then draw playe sprite after 1000
+     * miillisecond delay. */
+    blit_image(0, 0, background, screen);
+    SDL_Flip(screen);
+    SDL_Delay(1000);
+    blit_image(0, 0, player, screen);
+    SDL_Flip(screen);
+    SDL_Delay(1000);
 
     /* SDL event loop. */
     SDL_Event events = { 0, };
@@ -44,7 +78,7 @@ namespace Fart
       {
         case SDL_QUIT:
           std::clog << "Quit event received." << std::endl;
-          SDL_Quit();
+          quit_game();
           return;
           break;
         case SDL_KEYDOWN:
@@ -72,6 +106,53 @@ namespace Fart
 
   Fart::~Fart()
   {
+  }
+
+  /* Load images for sprites and convert to display format. */
+  SDL_Surface* Fart::load_image(const char * const filename)
+  {
+    SDL_Surface *temp = SDL_LoadBMP(filename);
+    if(temp)
+    {
+      SDL_SetColorKey(temp, SDL_SRCCOLORKEY, SDL_MapRGB(temp->format, 0, 0, 0));
+      SDL_Surface *destination = SDL_DisplayFormat(temp);
+      if(destination)
+      {
+        SDL_FreeSurface(temp);
+        return destination;
+      }
+      else
+      {
+        return static_cast<SDL_Surface*>(0);
+      }
+    }
+    else
+    {
+      return static_cast<SDL_Surface*>(0);
+    }
+  }
+
+  void Fart::blit_image(int x, int y, SDL_Surface *source, SDL_Surface *destination)
+  {
+    SDL_Rect offset = { 0, };
+    offset.x = x;
+    offset.y = y;
+
+    if(SDL_BlitSurface(source, static_cast<SDL_Rect*>(0), destination, &offset) == 0)
+    {
+      std::clog << "Image blitted successfully." << std::endl;
+    }
+    else
+    {
+      std::cerr << "Image blit failed: " << SDL_GetError() << std::endl;
+    }
+  }
+
+  void Fart::quit_game()
+  {
+    SDL_FreeSurface(background);
+    SDL_FreeSurface(player);
+    SDL_Quit();
   }
 }
 

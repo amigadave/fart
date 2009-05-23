@@ -21,8 +21,23 @@
 
 namespace Fart
 {
+  /* Constants that can be changed when there is a UI. */
+  const int SCREEN_WIDTH = 640;
+  const int SCREEN_HEIGHT = 480;
+  const int SCREEN_DEPTH = 32;
+  const char * const BACKGROUND = "data/background.bmp";
+  const char * const PLAYER = "data/rocket_off.bmp";
+
   class Fart
   {
+    SDL_Surface *screen;
+    SDL_Surface *background;
+    SDL_Surface *player;
+
+    SDL_Surface *load_image(const char * const filename);
+    void blit_image(int x, int y, SDL_Surface *source, SDL_Surface *destination);
+    void quit_game();
+
     public:
       Fart();
       ~Fart();
