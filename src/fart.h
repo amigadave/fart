@@ -34,6 +34,8 @@ namespace Fart
     SDL_Surface *background;
     SDL_Surface *player;
 
+    bool quit;
+
     SDL_Surface *load_image(const char * const filename);
     void blit_image(int x, int y, SDL_Surface *source, SDL_Surface *destination);
     void quit_game();

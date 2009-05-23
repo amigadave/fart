@@ -23,7 +23,8 @@
 
 namespace Fart
 {
-  Fart::Fart()
+  Fart::Fart() :
+    quit(false)
   {
     /* Set video mode. */
     SDL_Surface *screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_DEPTH, SDL_HWSURFACE | SDL_DOUBLEBUF);
@@ -70,38 +71,49 @@ namespace Fart
     SDL_Flip(screen);
     SDL_Delay(1000);
 
-    /* SDL event loop. */
-    SDL_Event events = { 0, };
-    while(SDL_PollEvent(&events))
+    while(!quit)
     {
-      switch(events.type)
+      /* SDL event loop. */
+      SDL_Event events = { 0, };
+      if(SDL_PollEvent(&events))
       {
-        case SDL_QUIT:
-          std::clog << "Quit event received." << std::endl;
-          quit_game();
-          return;
-          break;
-        case SDL_KEYDOWN:
-          switch(events.key.keysym.sym)
-          {
-            case SDLK_ESCAPE:
-              {
-              std::clog << "Escape pressed." << std::endl;
-              SDL_Event quit_event = { 0, };
-              quit_event.type = SDL_QUIT;
-              SDL_PushEvent(&quit_event);
-              break;
-              }
-            default:
-              std::cerr << "Unhandled key pressed." << std::endl;
-              break;
-          }
-          break;
-        default:
-          std::cerr << "Unhandled event received." << std::endl;
-          break;
+        switch(events.type)
+        {
+          case SDL_QUIT:
+            std::clog << "Quit event received." << std::endl;
+            quit = true;
+            break;
+          case SDL_KEYDOWN:
+            switch(events.key.keysym.sym)
+            {
+              case SDLK_ESCAPE:
+                {
+                  std::clog << "Escape pressed." << std::endl;
+                  SDL_Event quit_event = { 0, };
+                  quit_event.type = SDL_QUIT;
+                  SDL_PushEvent(&quit_event);
+                  break;
+                }
+              default:
+                std::cerr << "Unhandled key pressed." << std::endl;
+                break;
+            }
+            break;
+          default:
+            std::cerr << "Unhandled event received." << std::endl;
+            break;
+        }
+      }
+
+      /* Flip screen, and quit on failure. */
+      if(SDL_Flip(screen) == -1)
+      {
+        std::cerr << "Error flipping screen." << std::endl;
+        quit = true;
       }
     }
+
+    quit_game();
   }
 
   Fart::~Fart()
