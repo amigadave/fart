@@ -16,9 +16,9 @@
  * along with Fart. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include "SDL.h"
 #include "fart.h"
+#include "SDL.h"
+#include <iostream>
 
 int main(int argc, char **argv)
 {

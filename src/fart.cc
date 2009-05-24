@@ -16,11 +16,11 @@
  * along with Fart. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
-#include <iostream>
-#include "SDL.h"
+#include <config.h>
 #include "fart.h"
 #include "timer.h"
+#include "SDL.h"
+#include <iostream>
 
 namespace Fart
 {

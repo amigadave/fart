@@ -19,6 +19,8 @@
 #ifndef _FART_FART_H
 #define _FART_FART_H
 
+#include "SDL.h"
+
 namespace Fart
 {
   /* Constants that can be changed when there is a UI. */
