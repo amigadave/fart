@@ -1,9 +1,9 @@
 Fart
 ----
 
-A SDL lunar lander game.
+A SDL lunar lander game. Press 'k' to thrust.
 
 Dependencies
 ------------
 
-libsdl
+libsdl >= 1.2.0

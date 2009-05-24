@@ -20,6 +20,7 @@
 #include <iostream>
 #include "SDL.h"
 #include "fart.h"
+#include "timer.h"
 
 namespace Fart
 {
@@ -63,11 +64,18 @@ namespace Fart
     }
 
     /* Blit background and player sprite to screen. */
+    SDL_Rect screen_rect = { 0, };
+    screen_rect.w = screen->w;
+    screen_rect.h = screen->h;
+    SDL_FillRect(screen, &screen_rect, SDL_MapRGB(screen->format, 0, 0, 50));
     blit_image(0, 0, background, screen);
     blit_image(0, 0, player, screen);
     SDL_Flip(screen);
 
+    /* Main loop. */
     SDL_Event events = { 0, };
+    Timer frame_timer;
+    frame_timer.start();
     while(!quit)
     {
       /* SDL event loop. */
@@ -97,6 +105,11 @@ namespace Fart
         std::clog << "Thrust key pressed." << std::endl;
       }
 
+      /* Take time since previous time and run physics calculations. */
+      Uint32 frame_delta = frame_timer.get_ticks();
+      frame_timer.start();
+      std::clog << "Ticks this frame: " << frame_delta << std::endl;
+
       /* Flip screen, and quit on failure. */
       if(SDL_Flip(screen) == -1)
       {
@@ -105,6 +118,7 @@ namespace Fart
       }
     }
 
+    /* Cleanup and exit. */
     quit_game();
   }
 
@@ -112,7 +126,8 @@ namespace Fart
   {
   }
 
-  /* Load images for sprites and convert to display format. */
+  /* Load images for sprites and convert to display format.
+   * Set colour key to black. */
   SDL_Surface* Fart::load_image(const char * const filename)
   {
     SDL_Surface *temp = SDL_LoadBMP(filename);
@@ -136,6 +151,7 @@ namespace Fart
     }
   }
 
+  /* Blit whole image att offset x, y. */
   void Fart::blit_image(int x, int y, SDL_Surface *source, SDL_Surface *destination)
   {
     SDL_Rect offset = { 0, };
