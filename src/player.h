@@ -16,29 +16,39 @@
  * along with Fart. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FART_FART_H
-#define _FART_FART_H
+#ifndef _FART_PLAYER_H
+#define _FART_PLAYER_H
 
-#include "player.h"
+#include "velocity.h"
 #include "SDL.h"
 
 namespace Fart
 {
-  class Fart
+  /* Constant at the moment, can change once there is a UI. */
+  const int mass = 20000;
+  const double fuel_efficiency = 3000000.0;
+
+  /* Will move into "level" class and be set based on planet gravity. */
+  const double MOON_GRAVITY = 1.622;
+
+  class Player
   {
-    SDL_Surface *screen;
-    SDL_Surface *background;
-    Player player;
+    SDL_Surface *surface;
 
-    bool quit;
-
-    void blit_image(int x, int y, SDL_Surface *source, SDL_Surface *destination);
-    void quit_game();
+    /* SI units used for mass and length, angles in radians. */
+    double x, y;
+    double angle;
+    Velocity velocity;
+    double fuel_mass;
 
     public:
-      Fart();
-      ~Fart();
+
+    Player();
+    ~Player();
+
+    void thrust(Uint32 ticks);
+    void fall(Uint32 ticks);
   };
 }
 
-#endif /* _FART_FART_H */
+#endif /* _FART_PLAYER_H */

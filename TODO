@@ -1,0 +1,10 @@
+TODO
+----
+
+* Draw player on screen
+** Fart class to draw player, or Player class?
+* Allow player to land when reaching surface
+* Improve velocity class
+** Add operator to combine two Velocity objects
+* Mass class for objects with mass (that should be affected by gravity)
+** Move code out of Player class and into Mass class

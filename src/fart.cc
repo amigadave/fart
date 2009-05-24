@@ -19,6 +19,7 @@
 #include <config.h>
 #include "fart.h"
 #include "timer.h"
+#include "utils.h"
 #include "SDL.h"
 #include <iostream>
 
@@ -52,16 +53,6 @@ namespace Fart
       std::cerr << "Error loading background image." << std::endl;
       quit_game();
     }
-    player = load_image(PLAYER);
-    if(player)
-    {
-      std::clog << "Player image loaded." << std::endl;
-    }
-    else
-    {
-      std::cerr << "Error loading player image." << std::endl;
-      quit_game();
-    }
 
     /* Blit background and player sprite to screen. */
     SDL_Rect screen_rect = { 0, };
@@ -69,7 +60,6 @@ namespace Fart
     screen_rect.h = screen->h;
     SDL_FillRect(screen, &screen_rect, SDL_MapRGB(screen->format, 0, 0, 50));
     blit_image(0, 0, background, screen);
-    blit_image(0, 0, player, screen);
     SDL_Flip(screen);
 
     /* Main loop. */
@@ -93,6 +83,13 @@ namespace Fart
         }
       }
 
+      /* Take time since previous time and run physics calculations. */
+      Uint32 frame_delta = frame_timer.get_ticks();
+      frame_timer.start();
+      std::clog << "Ticks this frame: " << frame_delta << std::endl;
+
+      player.fall(frame_delta);
+
       /* Probe key state, rather than using key pressed/unpressed events. */
       Uint8 *keystate = SDL_GetKeyState(static_cast<int*>(0));
       if(keystate[SDLK_ESCAPE])
@@ -103,12 +100,8 @@ namespace Fart
       if(keystate[SDLK_k])
       {
         std::clog << "Thrust key pressed." << std::endl;
+        player.thrust(frame_delta);
       }
-
-      /* Take time since previous time and run physics calculations. */
-      Uint32 frame_delta = frame_timer.get_ticks();
-      frame_timer.start();
-      std::clog << "Ticks this frame: " << frame_delta << std::endl;
 
       /* Flip screen, and quit on failure. */
       if(SDL_Flip(screen) == -1)
@@ -124,31 +117,6 @@ namespace Fart
 
   Fart::~Fart()
   {
-  }
-
-  /* Load images for sprites and convert to display format.
-   * Set colour key to black. */
-  SDL_Surface* Fart::load_image(const char * const filename)
-  {
-    SDL_Surface *temp = SDL_LoadBMP(filename);
-    if(temp)
-    {
-      SDL_SetColorKey(temp, SDL_SRCCOLORKEY, SDL_MapRGB(temp->format, 0, 0, 0));
-      SDL_Surface *destination = SDL_DisplayFormat(temp);
-      if(destination)
-      {
-        SDL_FreeSurface(temp);
-        return destination;
-      }
-      else
-      {
-        return static_cast<SDL_Surface*>(0);
-      }
-    }
-    else
-    {
-      return static_cast<SDL_Surface*>(0);
-    }
   }
 
   /* Blit whole image att offset x, y. */
@@ -171,7 +139,6 @@ namespace Fart
   void Fart::quit_game()
   {
     SDL_FreeSurface(background);
-    SDL_FreeSurface(player);
     SDL_Quit();
   }
 }

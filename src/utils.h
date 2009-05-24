@@ -16,29 +16,22 @@
  * along with Fart. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FART_FART_H
-#define _FART_FART_H
+#ifndef _FART_UTILS_H
+#define _FART_UTILS_H
 
-#include "player.h"
 #include "SDL.h"
 
 namespace Fart
 {
-  class Fart
-  {
-    SDL_Surface *screen;
-    SDL_Surface *background;
-    Player player;
+  /* Constants that can be changed when there is a UI. */
+  const int SCREEN_WIDTH = 640;
+  const int SCREEN_HEIGHT = 480;
+  const int SCREEN_DEPTH = 32;
+  const char * const BACKGROUND = "data/background.bmp";
+  const char * const PLAYER = "data/rocket_off.bmp";
+  const int TICKS_PER_SECOND = 1000;
 
-    bool quit;
-
-    void blit_image(int x, int y, SDL_Surface *source, SDL_Surface *destination);
-    void quit_game();
-
-    public:
-      Fart();
-      ~Fart();
-  };
+  SDL_Surface *load_image(const char * const filename);
 }
 
-#endif /* _FART_FART_H */
+#endif /* _FART_UTILS_H */

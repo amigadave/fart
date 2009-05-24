@@ -16,29 +16,33 @@
  * along with Fart. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _FART_FART_H
-#define _FART_FART_H
-
-#include "player.h"
+#include "utils.h"
 #include "SDL.h"
 
 namespace Fart
 {
-  class Fart
+  /* Load images for sprites and convert to display format.
+   * Set colour key to black. */
+  SDL_Surface* load_image(const char * const filename)
   {
-    SDL_Surface *screen;
-    SDL_Surface *background;
-    Player player;
-
-    bool quit;
-
-    void blit_image(int x, int y, SDL_Surface *source, SDL_Surface *destination);
-    void quit_game();
-
-    public:
-      Fart();
-      ~Fart();
-  };
+    SDL_Surface *temp = SDL_LoadBMP(filename);
+    if(temp)
+    {
+      SDL_SetColorKey(temp, SDL_SRCCOLORKEY, SDL_MapRGB(temp->format, 0, 0, 0));
+      SDL_Surface *destination = SDL_DisplayFormat(temp);
+      if(destination)
+      {
+        SDL_FreeSurface(temp);
+        return destination;
+      }
+      else
+      {
+        return static_cast<SDL_Surface*>(0);
+      }
+    }
+    else
+    {
+      return static_cast<SDL_Surface*>(0);
+    }
+  }
 }
-
-#endif /* _FART_FART_H */
