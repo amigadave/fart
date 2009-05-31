@@ -20,7 +20,7 @@
 #include "fart.h"
 #include "timer.h"
 #include "utils.h"
-#include "SDL.h"
+#include <SDL.h>
 #include <iostream>
 
 namespace Fart

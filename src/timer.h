@@ -19,7 +19,7 @@
 #ifndef _FART_TIMER_H
 #define _FART_TIMER_H
 
-#include "SDL.h"
+#include <SDL.h>
 
 namespace Fart
 {

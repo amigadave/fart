@@ -20,7 +20,7 @@
 #define _FART_FART_H
 
 #include "player.h"
-#include "SDL.h"
+#include <SDL.h>
 
 namespace Fart
 {

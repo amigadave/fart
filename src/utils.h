@@ -19,7 +19,7 @@
 #ifndef _FART_UTILS_H
 #define _FART_UTILS_H
 
-#include "SDL.h"
+#include <SDL.h>
 
 namespace Fart
 {
@@ -30,6 +30,7 @@ namespace Fart
   const char * const BACKGROUND = "data/background.bmp";
   const char * const PLAYER = "data/rocket_off.bmp";
   const int TICKS_PER_SECOND = 1000;
+  const int PIXELS_PER_METRE = 10;
 
   SDL_Surface *load_image(const char * const filename);
 }

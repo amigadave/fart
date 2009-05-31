@@ -17,7 +17,7 @@
  */
 
 #include "timer.h"
-#include "SDL.h"
+#include <SDL.h>
 
 namespace Fart
 {

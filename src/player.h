@@ -20,7 +20,7 @@
 #define _FART_PLAYER_H
 
 #include "velocity.h"
-#include "SDL.h"
+#include <SDL.h>
 
 namespace Fart
 {

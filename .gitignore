@@ -15,6 +15,7 @@ aclocal.m4
 autom4te.cache
 compile
 depcomp
+INSTALL
 install-sh
 missing
 stamp-h1
